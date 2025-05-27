@@ -1,0 +1,11 @@
+import sqlite3 as sql
+
+banco = sql.connect('banco_lojaArcanjo')
+
+cursor = banco.cursor()
+#cursor.execute("CREATE TABLE loja (Nome_produto text, valor real, estoque integer, codigo integer)")
+
+#cursor.execute("INSERT INTO loja VALUES('Pneu traseiro biz',180.00, 5, 1)")
+#banco.commit()
+cursor.execute("SELECT * FROM loja")
+print(cursor.fetchall())
