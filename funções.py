@@ -69,8 +69,29 @@ def PesquisaDeProdutos():
             print("valor:", linha[1])
             print("Quantidade de itens:", linha[2])
 
-#def AdicionarProdutoAoEstoque()
-     
+def AdicionarProdutoAoEstoque():
+    import sqlite3
+
+    banco = sqlite3.connect('banco_lojaArcanjo.db')
+    cursor = banco.cursor()
+
+    codigo = int(input("Digite o código do produto: "))
+
+    cursor.execute("SELECT * FROM loja WHERE codigo = ?", (codigo,))
+    produto_existente = cursor.fetchone()
+
+    if produto_existente:
+         print("Já existe um produto com esse código!")
+    else:     
+        nome = input("Digite o nome do produto: ")
+        valor = float(input("Digite o valor do produto: "))
+        estoque = int(input("Digite a quantidade em estoque: "))
+        
+        cursor.execute("INSERT INTO loja VALUES (?, ?, ?, ?)", (nome, valor, estoque, codigo))
+        banco.commit()
+    
+        print("Produto adicionado!")
+    banco.close()
 #def RemoverProdutoAoEstoque()
 
      

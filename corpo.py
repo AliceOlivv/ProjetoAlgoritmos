@@ -1,6 +1,6 @@
 
 import inquirer
-
+#lembrar pip install inquirer
 import funções
 
 pergunta = [
@@ -75,9 +75,9 @@ elif resposta["inicio"]== "Gerenciamento de Estoque":
 
     resposta4=inquirer.prompt(gerenciamento)
 
-    if resposta4["estoque"]==" Adicionar produto":
+    if resposta4["estoque"]=="Adicionar produto":
          funções.AdicionarProdutoAoEstoque()
-    if resposta4["estoque"]==" Remover produto":
+    if resposta4["estoque"]=="Remover produto":
          funções.RemoverProdutoAoEstoque()
 
 #if resposta["inicio"]== "Resumo Mensal":
