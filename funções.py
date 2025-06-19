@@ -26,7 +26,7 @@ def CadastrarServiço():
     else:
         serviço=input("Digite o nome do serviço")
 
-        valor_serviço=("Digite o valor do serviço: ")
+        valor_serviço=input("Digite o valor do serviço: ")
         while not valor_serviço.isnumeric():
                 print("Erro. Digite um número:")
                 valor_serviço=(input(""))
