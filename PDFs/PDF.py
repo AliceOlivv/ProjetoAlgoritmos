@@ -1,6 +1,6 @@
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
-from reportlab.platypus import Paragraph, Spacer
+from reportlab.platypus import Paragraph, Image, Spacer
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 
 from reportlab.platypus import SimpleDocTemplate
@@ -29,5 +29,7 @@ paragrafo1 = Paragraph(texto1, estilo)
 
 paragrafo2 = Paragraph(texto2, estilo)
 
+grafico_img = Image('Análises.png', width = 400, height = 240)
+
 # Monta o documento
-pdf.build([paragrafo1, Spacer(1, 12), paragrafo2])
+pdf.build([paragrafo1, Spacer(1, 12), grafico_img, Spacer(1, 12), paragrafo2])
