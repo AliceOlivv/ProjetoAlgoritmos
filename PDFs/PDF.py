@@ -23,6 +23,8 @@ texto1 = variavelTexto #Só pra testar se funciona com variáveis
 
 texto2 = """Clara adorava observar estrelas. Todas as noites, ela subia no telhado e se perdia no brilho do céu. Certo dia, uma estrela cadente riscou o horizonte, e Clara fez um pedido silencioso: queria entender o universo. Na manhã seguinte, encontrou um pequeno livro sobre astronomia na porta de casa, sem remetente. Animada, começou a estudar com dedicação. Com o tempo, suas perguntas se transformaram em descobertas, e Clara se tornou uma astrônoma respeitada, realizando sonhos que começaram sob o manto das estrelas."""
 
+# Adicionar um paragrafo falando sobre itens que estão parados no estoque
+
 paragrafo1 = Paragraph(texto1, estilo)
 
 paragrafo2 = Paragraph(texto2, estilo)
