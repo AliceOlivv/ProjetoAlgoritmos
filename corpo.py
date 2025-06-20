@@ -78,7 +78,7 @@ elif resposta["inicio"]== "Gerenciamento de Estoque":
     if resposta4["estoque"]=="Adicionar produto":
          funções.AdicionarProdutoAoEstoque()
     if resposta4["estoque"]=="Remover produto":
-         funções.RemoverProdutoAoEstoque()
+         funções.RemoverProdutoDoEstoque()
 
 #if resposta["inicio"]== "Resumo Mensal":
          

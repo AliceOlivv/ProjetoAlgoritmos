@@ -8,9 +8,6 @@
 
 #(Usar esses comandos toda vez q fizer uma função usando o banco)
 
-import inquirer
-
-
 def CadastrarServiço():
     import sqlite3
     banco = sqlite3.connect('banco_lojaArcanjo.db')
@@ -41,7 +38,7 @@ def CadastrarServiço():
         cursor.execute("INSERT INTO serviços VALUES (?, ?, ?)", (serviço, valor_serviço, codigo_serviço))
         banco.commit()
         banco.close()
-        print("Adicionado")
+        print("Serviço adicionado!")
 
 def CadastrarProdutos():
     import sqlite3
@@ -58,8 +55,22 @@ def CadastrarProdutos():
          print("Já existe um produto com esse código!")
     else:     
         nome = input("Digite o nome do produto: ")
+
+        while not nome.isalpha():
+            print('Nome inválido. Digite novamente!')
+            nome = input("Digite o nome do produto: ")
+
         valor = float(input("Digite o valor do produto: "))
+
+        while not valor==float:
+            print('Valor inválido. Digite novamente!')
+            valor = float(input("Digite o valor do produto: "))
+
         estoque = int(input("Digite a quantidade em estoque: "))
+
+        while not estoque.is_integer():
+            print('Estoque inválido. Digite novamente!')
+            estoque = int(input("Digite a quantidade em estoque: "))
         
         cursor.execute("INSERT INTO loja VALUES (?, ?, ?, ?)", (nome, valor, estoque, codigo))
         banco.commit()
@@ -123,7 +134,7 @@ def AdicionarProdutoAoEstoque():
 
    
 
-def RemoverProdutoAoEstoque():
+def RemoverProdutoDoEstoque():
     import sqlite3
     banco = sqlite3.connect('banco_lojaArcanjo.db')
     cursor = banco.cursor()
@@ -142,6 +153,13 @@ def RemoverProdutoAoEstoque():
 
         if quantidade > estoque_atual:
             print("Quantidade maior que o estoque disponível!")
+
+            decisao=str(input(f'Deseja digitar um novo valor disponível para retirada de estoque do produto {produto[0]}?'))
+            decisao.upper()
+
+            if decisao=='SIM':
+                RemoverProdutoDoEstoque(codigo)
+          
         else:
             novo_estoque = estoque_atual - quantidade
             cursor.execute("UPDATE loja SET estoque = ? WHERE codigo = ?", (novo_estoque, codigo))
