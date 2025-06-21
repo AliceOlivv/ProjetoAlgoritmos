@@ -17,4 +17,14 @@ cursor = banco.cursor()
 # cursor.execute("SELECT * FROM loja")
 # print(cursor.fetchall())
 
-# banco.close()
+#cursor.execute("ALTER TABLE loja ADD COLUMN valor_original real")
+#banco.commit()
+
+id_produto=int(input("Digite o id do produto: "))
+valor_original=float(input("Digite o valor original do produto"))
+
+cursor.execute("UPDATE loja SET valor_original = ? WHERE codigo=?",(valor_original,id_produto))
+banco.commit()
+
+
+banco.close()
