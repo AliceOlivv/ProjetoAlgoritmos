@@ -8,36 +8,68 @@
 
 #(Usar esses comandos toda vez q fizer uma função usando o banco)
 
+def ValidaString(parametro1):
+    if parametro1.isalpha():
+        return parametro1
+    
+    # a função "isalpha" analisa se todos os caracters da string são letras do alfabeto, retorna False se não e True se sim
+    # se retornar True retorna a string normalmente, se não pede um novo novo e chama a função novamente para valida-lo
+    else:
+        novo_valor = input("Nome inválido. Digite novamente: ")
+        return ValidaString(novo_valor)
+
+def ValidaInteiro(parametro1):
+     
+     try:
+        parametro1= int(parametro1)
+        return parametro1
+     #ele tenta converter para inteiro , se der erro, vai para o except
+
+     except ValueError:
+        novo_valor=input("Número inválido, digite novamente: ")
+        return ValidaInteiro(novo_valor)
+     #quando vai para o except, o usuário digita um novo valor e chamamos a função novamente para validá-lo
+     
+def ValidaFloat(parametro1):
+     # a mesma coisa do ValidaInteiro, mudando só a conversão para float
+     try:
+        parametro1= float(parametro1)
+        return parametro1
+     
+
+     except ValueError:
+        novo_valor=input("Número inválido, digite novamente: ")
+        return ValidaFloat(novo_valor)
+     
 def CadastrarServiço():
     import sqlite3
-    banco = sqlite3.connect('banco_lojaArcanjo.db')
-    cursor = banco.cursor()
+    banco = sqlite3.connect('banco_lojaArcanjo.db') #conecta o nosso programa com o arquivo do banco de dados, banco é um objeto em que podemos nos conectar e controlar o banco
+    cursor = banco.cursor() # cursor é o objeto em que executamos os comandos de sql
 
-    codigo = int(input("Digite o código do serviço: "))
+    
 
-    cursor.execute("SELECT * FROM serviço WHERE codigo = ?", (codigo,))
-    serviço_existente = cursor.fetchone()
+    codigo_serviço = (input("Digite o código do serviço: "))
+    codigo_serviço = ValidaInteiro(codigo_serviço)
+
+    cursor.execute("SELECT * FROM serviço WHERE codigo = ?", (codigo_serviço,)) #pesquisa, entre todas as colunas, as informações da linha onde o código é igual ao código enviado
+    serviço_existente = cursor.fetchone() #cria uma lista de tuplas com os resultados da pesquisa
 
     if serviço_existente:
-         print("Já existe um serviço com esse código!")
+         print("Já existe um serviço com esse código!") #se estiver informações na lista, é porque já existe um serviço com o código enviado, se não, não tem.
     else:
         serviço=input("Digite o nome do serviço")
 
+        serviço= ValidaString(serviço)
+
+
         valor_serviço=input("Digite o valor do serviço: ")
-        while not valor_serviço.isnumeric():
-                print("Erro. Digite um número:")
-                valor_serviço=(input(""))
-        valor_serviço=float(valor_serviço)
-                                                            
-        codigo_serviço=("Digite o código do serviço: ")
-        while not codigo_serviço.isnumeric():
-                print("Erro. Digite um número inteiro:")
-                codigo_serviço=(input(""))
-        codigo_serviço=int(codigo_serviço)
         
-        cursor.execute("INSERT INTO serviços VALUES (?, ?, ?)", (serviço, valor_serviço, codigo_serviço))
-        banco.commit()
-        banco.close()
+        valor_serviço= ValidaFloat(valor_serviço)
+                                                            
+        
+        cursor.execute("INSERT INTO serviço VALUES (?, ?, ?)", (serviço, valor_serviço, codigo_serviço)) # insere os valores nas colunas
+        banco.commit() # confirma que estamos inserindo essas informações no banco
+        banco.close() # fecha o banco para não ficar rodando sem precisão
         print("Serviço adicionado!")
 
 def CadastrarProdutos():
@@ -46,7 +78,8 @@ def CadastrarProdutos():
     banco = sqlite3.connect('banco_lojaArcanjo.db')
     cursor = banco.cursor()
 
-    codigo = int(input("Digite o código do produto: "))
+    codigo = (input("Digite o código do produto: "))
+    codigo = ValidaInteiro(codigo)
 
     cursor.execute("SELECT * FROM loja WHERE codigo = ?", (codigo,))
     produto_existente = cursor.fetchone()
@@ -55,23 +88,14 @@ def CadastrarProdutos():
          print("Já existe um produto com esse código!")
     else:     
         nome = input("Digite o nome do produto: ")
-
-        while not nome.isalpha():
-            print('Nome inválido. Digite novamente!')
-            nome = input("Digite o nome do produto: ")
-
-        valor = float(input("Digite o valor do produto: "))
-
-        while not valor==float:
-            print('Valor inválido. Digite novamente!')
-            valor = float(input("Digite o valor do produto: "))
-
-        estoque = int(input("Digite a quantidade em estoque: "))
-
-        while not estoque.is_integer():
-            print('Estoque inválido. Digite novamente!')
-            estoque = int(input("Digite a quantidade em estoque: "))
+        nome = ValidaString(nome)
         
+        valor = (input("Digite o valor do produto: "))
+        valor = ValidaFloat(valor)
+
+        estoque = (input("Digite a quantidade em estoque: "))
+        estoque = ValidaInteiro(estoque)
+
         cursor.execute("INSERT INTO loja VALUES (?, ?, ?, ?)", (nome, valor, estoque, codigo))
         banco.commit()
     
@@ -88,11 +112,8 @@ def PesquisaDeProdutos():
     cursor = banco.cursor()
 
     codigo=(input("Escreva o código do produto que deseja pesquisar: "))
-    while not codigo.isnumeric():
-        print("Erro. Digite um número:")
-        codigo=(input(""))
+    codigo= ValidaInteiro(codigo)
 
-    codigo=int(codigo)
 
     cursor.execute("SELECT * FROM loja WHERE codigo== ? ",(codigo,))
     dados= cursor.fetchall()
@@ -111,9 +132,10 @@ def AdicionarProdutoAoEstoque():
     banco = sqlite3.connect('banco_lojaArcanjo.db')
     cursor = banco.cursor()
 
-    codigo = int(input("Digite o código do produto que deseja adicionar ao estoque: "))
+    codigo_q = (input("Digite o código do produto que deseja adicionar ao estoque: "))
+    codigo_q = ValidaInteiro(codigo_q)
 
-    cursor.execute("SELECT nome, estoque FROM loja WHERE codigo = ?", (codigo,))
+    cursor.execute("SELECT nome, estoque FROM loja WHERE codigo = ?", (codigo_q,))
     produto = cursor.fetchone()
 
     if produto:
@@ -121,9 +143,10 @@ def AdicionarProdutoAoEstoque():
         estoque_atual = produto[1]
         print("Produto encontrado:", nome, "- Estoque atual:", estoque_atual)
 
-        quantidade = int(input("Digite a quantidade que deseja adicionar ao estoque: "))
+        quantidade_q = input("Digite a quantidade que deseja adicionar ao estoque: ")
+        quantidade_q = ValidaInteiro(quantidade_q)
 
-        novo_estoque = estoque_atual + quantidade
+        novo_estoque = estoque_atual + quantidade_q
         cursor.execute("UPDATE loja SET estoque = ? WHERE codigo = ?", (novo_estoque, codigo))
         banco.commit()
         print("Estoque atualizado com sucesso! Novo estoque:", novo_estoque)
@@ -139,7 +162,8 @@ def RemoverProdutoDoEstoque():
     banco = sqlite3.connect('banco_lojaArcanjo.db')
     cursor = banco.cursor()
 
-    codigo = int(input("Digite o código do produto que deseja retirar: "))
+    codigo = (input("Digite o código do produto que deseja retirar: "))
+    codigo = ValidaInteiro(codigo)
 
     cursor.execute("SELECT nome, estoque FROM loja WHERE codigo = ?", (codigo,))
     produto = cursor.fetchone()
