@@ -135,7 +135,7 @@ def AdicionarProdutoAoEstoque():
     codigo_q = (input("Digite o código do produto que deseja adicionar ao estoque: "))
     codigo_q = ValidaInteiro(codigo_q)
 
-    cursor.execute("SELECT nome, estoque FROM loja WHERE codigo = ?", (codigo_q,))
+    cursor.execute("SELECT Nome_produto, estoque FROM loja WHERE codigo = ?", (codigo_q,))
     produto = cursor.fetchone()
 
     if produto:
@@ -147,7 +147,7 @@ def AdicionarProdutoAoEstoque():
         quantidade_q = ValidaInteiro(quantidade_q)
 
         novo_estoque = estoque_atual + quantidade_q
-        cursor.execute("UPDATE loja SET estoque = ? WHERE codigo = ?", (novo_estoque, codigo))
+        cursor.execute("UPDATE loja SET estoque = ? WHERE codigo = ?", (novo_estoque, codigo_q))
         banco.commit()
         print("Estoque atualizado com sucesso! Novo estoque:", novo_estoque)
     else:
@@ -165,7 +165,7 @@ def RemoverProdutoDoEstoque():
     codigo = (input("Digite o código do produto que deseja retirar: "))
     codigo = ValidaInteiro(codigo)
 
-    cursor.execute("SELECT nome, estoque FROM loja WHERE codigo = ?", (codigo,))
+    cursor.execute("SELECT Nome_produto, estoque FROM loja WHERE codigo = ?", (codigo,))
     produto = cursor.fetchone()
 
     if produto:
