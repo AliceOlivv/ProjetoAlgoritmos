@@ -8,7 +8,7 @@ valores = [3000, 700, 2300, 300, 200, 1800]
 plt.figure(figsize = (10, 6))  # Largura x Altura
 plt.bar(categorias, valores, color = cores, width = 0.6)
 
-plt.title("Análises do Mês")
+plt.title("Análises da Loja")
 
 plt.ylabel("Valores (R$)")
 
