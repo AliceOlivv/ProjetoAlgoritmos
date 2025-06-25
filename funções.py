@@ -148,6 +148,13 @@ def AdicionarProdutoAoEstoque():
 
         novo_estoque = estoque_atual + quantidade_q
         cursor.execute("UPDATE loja SET estoque = ? WHERE codigo = ?", (novo_estoque, codigo_q))
+
+        # Parte pro PDF
+        cursor.execute("SELECT valor_original FROM loja WHERE codigo = ?", (codigo_q))
+        gastoUnidade = cursor.fetchone()
+        
+        cursor.execute("UPDATE Dados_Salvos SET Gastos_de_Produção = ? WHERE Data = 0", (gastoUnidade * quantidade_q))
+
         banco.commit()
         print("Estoque atualizado com sucesso! Novo estoque:", novo_estoque)
     else:
@@ -187,8 +194,20 @@ def RemoverProdutoDoEstoque():
         else:
             novo_estoque = estoque_atual - quantidade
             cursor.execute("UPDATE loja SET estoque = ? WHERE codigo = ?", (novo_estoque, codigo))
-            banco.commit()
+            
             print("Estoque atualizado!")
+
+            # Parte pro PDF
+            cursor.execute("SELECT valor FROM loja WHERE codigo = ?", (codigo))
+            ganhoUnidade = cursor.fetchone()
+        
+            cursor.execute("UPDATE Dados_Salvos SET Faturamento = ? WHERE Data = 0", (ganhoUnidade * quantidade))
+
+            cursor.execute("SELECT Vendidos FROM loja WHERE codigo = ?", (codigo,))
+            quantVendidos = cursor.fetchone()
+            cursor.execute("UPDATE loja SET Vendidos = ? WHERE codigo = ?", (quantVendidos + quantidade, codigo))
+
+            banco.commit()
     else:
         print("Produto não encontrado!")
 

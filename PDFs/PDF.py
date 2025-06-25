@@ -1,35 +1,40 @@
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import letter
-from reportlab.platypus import Paragraph, Image, Spacer
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+def criarPDF(data1, data2):
+    from reportlab.pdfgen import canvas
+    from reportlab.lib.pagesizes import letter
+    from reportlab.platypus import Paragraph, Image, Spacer
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 
-from reportlab.platypus import SimpleDocTemplate
+    from reportlab.platypus import SimpleDocTemplate
 
-# Cria o PDF
-pdf = SimpleDocTemplate("Análises.pdf", pagesize = letter)
+    # Cria o PDF
+    pdf = SimpleDocTemplate("Análises.pdf", pagesize = letter)
 
-styles = getSampleStyleSheet()
+    styles = getSampleStyleSheet()
 
-estilo = ParagraphStyle(
-    name = "RecuoEsquerdo",
-    parent = styles["Normal"],
-    firstLineIndent = 20)  # Valor em pontos (pt) do recuo à esquerda
+    estilo = ParagraphStyle(
+       name = "RecuoEsquerdo",
+       parent = styles["Normal"],
+       firstLineIndent = 20)  # Valor em pontos (pt) do recuo à esquerda
 
-variavelTexto = """Lucas encontrou uma caixa antiga no sótão da casa da avó. Dentro, havia cartas, fotos amareladas e um diário empoeirado. Curioso, começou a ler as memórias de um jovem aventureiro que desbravou terras distantes. Inspirado, decidiu seguir os passos daquele antepassado misterioso, planejando viagens e explorando mapas esquecidos. Cada página revelava segredos de coragem e amizade, e Lucas sentiu uma conexão profunda com aquele passado. Ao fechar o diário, ele sabia que a aventura estava apenas começando — e que ele também escreveria suas próprias histórias para as próximas gerações."""
+    texto1 = f"Este gráfico apresenta a análise financeira da loja ao longo do período de {str(data1)[6:8]}/{str(data1)[4:6]}/{str(data1)[0:4]} até {str(data2)[6:8]}/{str(data2)[4:6]}/{str(data2)[0:4]}, destacando o faturamento nesse periodo, quanto foi gasto e o lucro obtido."
 
-# Caso precise, <br/> quebra a linha no meio do texto
+    # Caso precise, <br/> quebra a linha no meio do texto
 
-texto1 = variavelTexto # Só pra testar se funciona com variáveis
+    texto2 = "O Lucro Bruto representa a diferença entre o Faturamento e os Gastos de Produção."
+    texto3 = "O Lucro Líquido é obtido após a dedução das Despesas Fixas e Variáveis."
 
-texto2 = """Clara adorava observar estrelas. Todas as noites, ela subia no telhado e se perdia no brilho do céu. Certo dia, uma estrela cadente riscou o horizonte, e Clara fez um pedido silencioso: queria entender o universo. Na manhã seguinte, encontrou um pequeno livro sobre astronomia na porta de casa, sem remetente. Animada, começou a estudar com dedicação. Com o tempo, suas perguntas se transformaram em descobertas, e Clara se tornou uma astrônoma respeitada, realizando sonhos que começaram sob o manto das estrelas."""
+    paragrafo1 = Paragraph(texto1, estilo)
+    paragrafo2 = Paragraph(texto2, estilo)
+    paragrafo3 = Paragraph(texto3, estilo)
+    paragrafo4 = Paragraph(texto4, estilo)
 
-# Adicionar um paragrafo falando sobre itens que estão parados no estoque
+    criarGrafico(data1, data2)
+    grafico_img = Image('Análises.png', width = 400, height = 240)
 
-paragrafo1 = Paragraph(texto1, estilo)
+    conteudo = [paragrafo1, paragrafo2, paragrafo3, Spacer(1, 12), grafico_img, Spacer(1, 12)]
 
-paragrafo2 = Paragraph(texto2, estilo)
+    paragrafos = produtos_parados(data1, data2)
+    for frase in paragrafos:
+        conteudo.append([Paragraph(frase, estilo)])
 
-grafico_img = Image('Análises.png', width = 400, height = 240)
-
-# Monta o documento
-pdf.build([paragrafo1, Spacer(1, 12), grafico_img, Spacer(1, 12), paragrafo2])
+    pdf.build(conteudo)
