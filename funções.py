@@ -148,10 +148,12 @@ def AdicionarProdutoAoEstoque():
         cursor.execute("UPDATE loja SET estoque = ? WHERE codigo = ?", (novo_estoque, codigo_q))
 
         # Parte pro PDF
-        cursor.execute("SELECT valor_original FROM loja WHERE codigo = ?", (codigo_q))
-        gastoUnidade = cursor.fetchone()
-        
-        cursor.execute("UPDATE Dados_Salvos SET Gastos_de_Produção = ? WHERE Data = 0", (gastoUnidade * quantidade_q))
+        cursor.execute("SELECT valor_original FROM loja WHERE codigo = ?", (codigo_q,))
+        gastoUnidade = cursor.fetchone()[0]
+
+        gastosProd = gastoUnidade * quantidade_q
+        data = 0      
+        cursor.execute("UPDATE Dados_Salvos SET Gastos_de_Produção = ? WHERE Data = ?", (gastosProd, data))
 
         banco.commit()
         print("Estoque atualizado com sucesso! Novo estoque:", novo_estoque)
@@ -196,13 +198,13 @@ def RemoverProdutoDoEstoque():
             print("Estoque atualizado!")
 
             # Parte pro PDF
-            cursor.execute("SELECT valor FROM loja WHERE codigo = ?", (codigo))
-            ganhoUnidade = cursor.fetchone()
+            cursor.execute("SELECT valor FROM loja WHERE codigo = ?", (codigo,))
+            ganhoUnidade = cursor.fetchone()[0]
         
-            cursor.execute("UPDATE Dados_Salvos SET Faturamento = ? WHERE Data = 0", (ganhoUnidade * quantidade))
+            cursor.execute("UPDATE Dados_Salvos SET Faturamento = ? WHERE Data = 0", (ganhoUnidade * quantidade,))
 
             cursor.execute("SELECT Vendidos FROM loja WHERE codigo = ?", (codigo,))
-            quantVendidos = cursor.fetchone()
+            quantVendidos = cursor.fetchone()[0]
             cursor.execute("UPDATE loja SET Vendidos = ? WHERE codigo = ?", (quantVendidos + quantidade, codigo))
 
             banco.commit()
@@ -221,15 +223,13 @@ def RemovercadastroProduto():
 
     cursor.execute("SELECT * FROM loja WHERE codigo== ? ",(codigo,))
     dados= cursor.fetchall()
-    banco.commit()
 
     while dados == []:
         print("Codigo inválido. Digite novamente!")
-        codigo = (input("Digite o código do produto: "))
+        codigo = (input("Digite o código do produto: ")) #roda inifinitamente se n quiser digitar outro codigo
         codigo = ValidaInteiro(codigo)
         cursor.execute("SELECT * FROM loja WHERE codigo== ? ",(codigo,))
         dados= cursor.fetchall()
-        banco.commit()
 
     cursor.execute("DELETE from loja WHERE codigo = ?", (codigo,))
     print('Produto removido com sucesso!')

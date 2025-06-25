@@ -1,3 +1,5 @@
+import funções_pdf
+
 def criarPDF(data1, data2):
     from reportlab.pdfgen import canvas
     from reportlab.lib.pagesizes import letter
@@ -26,15 +28,27 @@ def criarPDF(data1, data2):
     paragrafo1 = Paragraph(texto1, estilo)
     paragrafo2 = Paragraph(texto2, estilo)
     paragrafo3 = Paragraph(texto3, estilo)
-    paragrafo4 = Paragraph(texto4, estilo)
 
-    criarGrafico(data1, data2)
+    funções_pdf.criarGrafico(data1, data2)
     grafico_img = Image('Análises.png', width = 400, height = 240)
 
-    conteudo = [paragrafo1, paragrafo2, paragrafo3, Spacer(1, 12), grafico_img, Spacer(1, 12)]
+    # Estilo para o título
+    estilo_titulo = ParagraphStyle(
+        name = "Titulo",
+        parent = styles["Heading1"],
+        alignment = 1,  # 0 = esquerda, 1 = centralizado, 2 = direita
+        fontSize = 18,
+        spaceAfter = 20
+    )
 
-    paragrafos = produtos_parados(data1, data2)
+    # Título do relatório
+    titulo_texto = "Análise Financeira da Loja Arcanjo"
+    titulo = Paragraph(titulo_texto, estilo_titulo)
+
+    conteudo = [titulo, paragrafo1, paragrafo2, paragrafo3, Spacer(1, 12), grafico_img, Spacer(1, 12)]
+
+    paragrafos = funções_pdf.produtos_parados(data1, data2)
     for frase in paragrafos:
-        conteudo.append([Paragraph(frase, estilo)])
+        conteudo.append(Paragraph(frase, estilo))
 
     pdf.build(conteudo)
