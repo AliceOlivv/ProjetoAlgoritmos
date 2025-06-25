@@ -105,9 +105,7 @@ def CadastrarProdutos():
 def PesquisaDeProdutos():
     import sqlite3
 
-
     banco = sqlite3.connect("banco_lojaArcanjo.db")
-
 
     cursor = banco.cursor()
 
@@ -211,4 +209,56 @@ def RemoverProdutoDoEstoque():
     else:
         print("Produto não encontrado!")
 
+    banco.close()
+
+def RemovercadastroProduto():
+    import sqlite3
+    banco = sqlite3.connect('banco_lojaArcanjo.db')
+    cursor = banco.cursor()
+
+    codigo = (input("Digite o código do produto: "))
+    codigo = ValidaInteiro(codigo)
+
+    cursor.execute("SELECT * FROM loja WHERE codigo== ? ",(codigo,))
+    dados= cursor.fetchall()
+    banco.commit()
+
+    while dados == []:
+        print("Codigo inválido. Digite novamente!")
+        codigo = (input("Digite o código do produto: "))
+        codigo = ValidaInteiro(codigo)
+        cursor.execute("SELECT * FROM loja WHERE codigo== ? ",(codigo,))
+        dados= cursor.fetchall()
+        banco.commit()
+
+    cursor.execute("DELETE from loja WHERE codigo = ?", (codigo,))
+    print('Produto removido com sucesso!')
+
+    banco.commit()
+    banco.close()
+
+def RemovercadastroServico():
+    import sqlite3
+    banco = sqlite3.connect('banco_lojaArcanjo.db')
+    cursor = banco.cursor()
+
+    codigo = (input("Digite o código do serviço: "))
+    codigo = ValidaInteiro(codigo)
+
+    cursor.execute("SELECT * FROM loja WHERE codigo== ? ",(codigo,))
+    dados= cursor.fetchall()
+    banco.commit()
+
+    while dados == []:
+        print("Codigo inválido. Digite novamente!")
+        codigo = (input("Digite o código do serviço: "))
+        codigo = ValidaInteiro(codigo)
+        cursor.execute("SELECT * FROM serviço WHERE codigo== ? ",(codigo,))
+        dados= cursor.fetchall()
+        banco.commit()
+
+    cursor.execute("DELETE from serviço WHERE codigo = ?", (codigo,))
+    print('Serviço removido com sucesso!')
+ 
+    banco.commit()
     banco.close()

@@ -11,6 +11,7 @@ pergunta = [
             'Pesquisa de Produto ou Agendamento de serviço',
             'Cadastramento de novos produtos ou serviços',
             'Gerenciamento de Estoque',
+            'Remoção de produto ou serviço',
             'Resumo Mensal'
         ]
     )
@@ -80,6 +81,27 @@ elif resposta["inicio"]== "Gerenciamento de Estoque":
          
     if resposta4["estoque"]=="Remover produto":
          funções.RemoverProdutoDoEstoque()
+
+elif resposta["inicio"]== "Remoção de produto ou serviço":
+      
+    cadastramento = [
+         inquirer.List(
+            'remover',
+            message="Deseja fazer a remoção de qual setor?",
+            choices=[
+                'Produtos',
+                'Serviços',
+            ]
+        )
+    ]
+
+    resposta5=inquirer.prompt(cadastramento)
+
+    if resposta5["remover"]=="Produtos":
+        funções.RemovercadastroProduto()
+
+    if resposta5["remover"]=="Serviços":
+        funções.RemovercadastroServico()
 
 #if resposta["inicio"]== "Resumo Mensal":
          
