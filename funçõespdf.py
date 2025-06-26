@@ -182,7 +182,7 @@ def salvarPDF(data1, data2):
     filetypes =[("Análises",".pdf")],
     title = "PDF Salvo")
 
-    criarPDF("Análises", data1, data2)
+    criarPDF("Análises", 20250624, 20250625)
 
 def abrirPDF():
     import os

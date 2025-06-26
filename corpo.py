@@ -90,6 +90,7 @@ class App(ctk.CTk):
                     width=220,
                     height=30,
                     font=("Helvetica", 14)).pack(pady=(10))
+
         ctk.CTkButton(janela,
                     text="Iniciar Análise",
                     command=self.botao_salvar_data,
@@ -613,6 +614,6 @@ class App(ctk.CTk):
 
         ctk.CTkButton(alinharbtn, text="Registrar", command=registrarservico_efetuado).pack(side="left", padx=10)
         ctk.CTkButton(alinharbtn, text="Voltar ao Menu", command=self.tela_menu_inicial).pack(side="left", padx=10)
-
+    
 app = App()
 app.mainloop()
