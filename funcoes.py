@@ -38,7 +38,7 @@ def CadastrarServiço(nome_servico, valor_servico, codigo_servico):
         banco.close()
         return "existe"
 
-    cursor.execute("INSERT INTO serviço VALUES (?, ?, ?)", (nome_servico, valor_servico, codigo_servico))
+    cursor.execute("INSERT INTO serviço VALUES (?, ?, ?, ?)", (nome_servico, valor_servico, codigo_servico, 0))
     banco.commit()
     banco.close()
     return "sucesso"
@@ -153,7 +153,7 @@ def RemoverCadastroserviço(codigo_serviço):
         return None
 
     else: 
-        nome, valor, codigo = dados
+        nome, valor, codigo, Efetuados = dados
         cursor.execute("DELETE from serviço WHERE codigo = ?", (codigo_serviço, ))
         banco.commit()
         banco.close()
