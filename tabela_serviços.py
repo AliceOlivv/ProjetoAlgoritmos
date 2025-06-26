@@ -1,8 +1,8 @@
-import sqlite3 as sql
+# import sqlite3 as sql
 
-banco = sql.connect('banco_lojaArcanjo.db')
+# banco = sql.connect('banco_lojaArcanjo.db')
 
-cursor = banco.cursor()
+# cursor = banco.cursor()
 
 
 #cursor.execute("CREATE TABLE serviço (Nome_serviço text, valor real, codigo integer)")
@@ -24,6 +24,7 @@ cursor = banco.cursor()
 #valor_original=float(input("Digite o valor original do produto: "))
 
 #cursor.execute("UPDATE loja SET valor_original = ? WHERE codigo=?",(valor_original,id_produto))
-#banco.commit()
+# cursor.execute("ALTER TABLE serviço ADD COLUMN Efetuados INTEGER DEFAULT 0") #para criar nova coluna p controle de serviços feitos
+# banco.commit()
 
-#banco.close()
+# banco.close()

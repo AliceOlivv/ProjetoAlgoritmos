@@ -73,6 +73,12 @@ class App(ctk.CTk):
                       height=30,
                       font=("Helvetica", 14)).pack(pady=10)
         ctk.CTkButton(janela,
+                    text="Registrar Serviço Efetuado",
+                    command=self.abrir_tela_registrar_serviço,
+                    width=220,
+                    height=30,
+                    font=("Helvetica", 14)).pack(pady=10)
+        ctk.CTkButton(janela,
                       text="Remover serviço",
                       command= self.abrir_tela_removerserv_cadastrado,
                       width=220,
@@ -561,6 +567,46 @@ class App(ctk.CTk):
 
         ctk.CTkButton(alinharbtn, text="Salvar Data", command=salvar_data, width=140).pack(side="left", padx=10)
         ctk.CTkButton(alinharbtn, text="Voltar ao Menu", command=self.tela_menu_inicial, width=140).pack(side="left", padx=10)
+    def abrir_tela_registrar_serviço(self):
+        for itens in self.winfo_children():
+            itens.destroy()
+
+        janela = ctk.CTkFrame(self, corner_radius=15)
+        janela.pack(pady=70, padx=70, fill="both", expand=True)
+
+        ctk.CTkLabel(janela, text="Registrar Serviço Efetuado", font=("Helvetica", 20, "bold")).pack(pady=15)
+
+        self.codigo_serviço_entrada = ctk.CTkEntry(janela, placeholder_text="Código do Serviço", width=300)
+        self.codigo_serviço_entrada.pack(pady=8)
+
+        
+        self.msg_erro = ctk.CTkLabel(janela, text="", text_color="red", font=("Helvetica", 12))
+        self.msg_erro.pack(pady=3)
+
+        def registrarservico_efetuado():
+            from funcoes import registrar_servico
+            self.msg_erro.configure(text="")
+            codigo = self.codigo_serviço_entrada.get()
+
+            if not codigo:
+                self.msg_erro.configure(text="Digite o código do serviço!")
+                return
+
+            try:
+                codigo = int(codigo)
+                registrar_servico(codigo)
+                CTkMessagebox(title="Sucesso", message="Serviço registrado com sucesso!", icon="check")
+                self.codigo_serviço_entrada.delete(0, ctk.END)
+            except ValueError:
+                self.msg_erro.configure(text="Código deve ser um número!")
+            except Exception as e:
+                CTkMessagebox(title="Erro", message=f"Erro ao registrar: {e}", icon="cancel")
+
+        alinharbtn = ctk.CTkFrame(janela, fg_color="transparent")
+        alinharbtn.pack(pady=15)
+
+        ctk.CTkButton(alinharbtn, text="Registrar", command=registrarservico_efetuado).pack(side="left", padx=10)
+        ctk.CTkButton(alinharbtn, text="Voltar ao Menu", command=self.tela_menu_inicial).pack(side="left", padx=10)
 
 app = App()
 app.mainloop()

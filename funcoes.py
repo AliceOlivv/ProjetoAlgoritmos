@@ -153,3 +153,18 @@ def RemoverCadastroserviço(codigo_serviço):
         banco.commit()
         banco.close()
         return nome, valor, codigo
+def registrar_servico(codigo, quantidade=1):
+    import sqlite3
+    banco = sqlite3.connect('banco_lojaArcanjo.db')
+    cursor = banco.cursor()
+
+    cursor.execute("SELECT Efetuados FROM serviço WHERE codigo = ?", (codigo,))
+    resultado = cursor.fetchone()
+
+    if resultado is not None:
+        efetuados_atuais = resultado[0] or 0
+        nova_quantidade = efetuados_atuais + quantidade
+        cursor.execute("UPDATE serviço SET Efetuados = ? WHERE codigo = ?", (nova_quantidade, codigo))
+        banco.commit()
+
+    banco.close()
