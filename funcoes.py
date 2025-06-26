@@ -108,6 +108,11 @@ def RemoverProdutoAoEstoque(codigo, quantidade):
     nova_quant = vendidos + quantidade
     cursor.execute("UPDATE loja SET Vendidos = ? WHERE codigo = ?", (nova_quant, codigo))
     
+    cursor.execute("SELECT Faturamento FROM Dados_Salvos WHERE Data = 0")
+    faturamentoAtual = cursor.fetchone()
+    novoFaturamento = faturamentoAtual + (valor * quantidade)
+    cursor.execute("UPDATE Dados_Salvos SET Faturamento = ? WHERE Data = 0", (novoFaturamento,))
+    
     banco.commit()
     banco.close()
 
@@ -153,6 +158,7 @@ def RemoverCadastroserviço(codigo_serviço):
         banco.commit()
         banco.close()
         return nome, valor, codigo
+    
 def registrar_servico(codigo, quantidade=1):
     import sqlite3
     banco = sqlite3.connect('banco_lojaArcanjo.db')
@@ -162,9 +168,20 @@ def registrar_servico(codigo, quantidade=1):
     resultado = cursor.fetchone()
 
     if resultado is not None:
+        cursor.execute("SELECT * FROM serviço WHERE codigo = ?", (codigo, ))
+        dados = cursor.fetchone()
+        banco.commit()
+
+        nome, valor, codigo, efetuados = dados
         efetuados_atuais = resultado[0] or 0
         nova_quantidade = efetuados_atuais + quantidade
         cursor.execute("UPDATE serviço SET Efetuados = ? WHERE codigo = ?", (nova_quantidade, codigo))
+
+        cursor.execute("SELECT Faturamento FROM Dados_Salvos WHERE Data = 0")
+        faturamentoAtual = cursor.fetchone()[0]
+        novoFaturamento = faturamentoAtual + (valor * quantidade)
+        cursor.execute("UPDATE Dados_Salvos SET Faturamento = ? WHERE Data = 0", (novoFaturamento,))
+
         banco.commit()
 
     banco.close()
