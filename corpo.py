@@ -567,6 +567,7 @@ class App(ctk.CTk):
 
         ctk.CTkButton(alinharbtn, text="Salvar Data", command=salvar_data, width=140).pack(side="left", padx=10)
         ctk.CTkButton(alinharbtn, text="Voltar ao Menu", command=self.tela_menu_inicial, width=140).pack(side="left", padx=10)
+
     def abrir_tela_registrar_serviço(self):
         for itens in self.winfo_children():
             itens.destroy()
@@ -594,9 +595,14 @@ class App(ctk.CTk):
 
             try:
                 codigo = int(codigo)
-                registrar_servico(codigo)
-                CTkMessagebox(title="Sucesso", message="Serviço registrado com sucesso!", icon="check")
-                self.codigo_serviço_entrada.delete(0, ctk.END)
+                resultado = registrar_servico(codigo)
+
+                if resultado == "sucesso":
+                    CTkMessagebox(title="Sucesso", message="Serviço registrado com sucesso!", icon="check")
+                    self.codigo_serviço_entrada.delete(0, ctk.END)
+                elif resultado == "nao existe":
+                    self.msg_erro.configure(text="Serviço não encontrado!")
+
             except ValueError:
                 self.msg_erro.configure(text="Código deve ser um número!")
             except Exception as e:
