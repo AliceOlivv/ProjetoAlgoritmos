@@ -19,21 +19,20 @@ class App(ctk.CTk):
             itens.destroy()
 
         # Cria um quadro centralizado com cantos arredondados
-        janela = ctk.CTkFrame(self, corner_radius=15)
-        janela.pack(pady=50, padx=50, fill="both", expand=True)
+        janela = ctk.CTkFrame(self, corner_radius = 15)
+        janela.pack(pady = 50, padx = 50, fill = "both", expand = True)
 
         # Título do sistema
         ctk.CTkLabel(
                     janela,
-                    text="Loja Arcanjo",
-                    font=("Helvetica", 26, "bold")
-                    ).pack(pady=(30, 10))
-
+                    text = "Loja Arcanjo",
+                    font = ("Helvetica", 26, "bold")
+                    ).pack(pady = (30, 10))
         ctk.CTkLabel(
                     janela,
-                    text="Menu Principal",
-                    font=("Helvetica", 18)
-                    ).pack(pady=(0, 30))
+                    text = "Menu Principal",
+                    font = ("Helvetica", 18)
+                    ).pack(pady = (0, 30))
     
 
         ctk.CTkButton(janela, 
@@ -84,19 +83,13 @@ class App(ctk.CTk):
                       width=220,
                       height=30,
                       font=("Helvetica", 14)).pack(pady=10)
+        
         ctk.CTkButton(janela, #Tem que ter 2 pra poder salvar antes e mostrar dps, pq so mostra o que existir
-                    text="Abrir PDF",
-                    command=funçõespdf.abrirPDF,
-                    width=220,
-                    height=30,
-                    font=("Helvetica", 14)).pack(pady=(10))
-
-        ctk.CTkButton(janela,
-                    text="Iniciar Análise",
-                    command=self.botao_salvar_data,
-                    width=220,
-                    height=30,
-                    font=("Helvetica", 14)).pack(pady=(10))
+                    text = "Análises de Progresso",
+                    command = self.abrirTelaPDF,
+                    width = 220,
+                    height = 30,
+                    font = ("Helvetica", 14)).pack(pady = (10))
 
 
     def abrir_tela_cadastro(self):
@@ -499,76 +492,6 @@ class App(ctk.CTk):
         ctk.CTkButton(alinharbtn, text="Remover serviço", command=remover_cadastroserv).pack(side="left", padx=10)
         ctk.CTkButton(alinharbtn, text="Voltar ao Menu", command=self.tela_menu_inicial).pack(side="left", padx=10)
 
-    def botao_salvar_data(self):
-        for item in self.winfo_children():
-            item.destroy()
-
-        janela = ctk.CTkFrame(self, corner_radius=15)
-        janela.pack(pady=70, padx=70, fill="both", expand=True)
-
-        ctk.CTkLabel(janela, text="Iniciar Análise", font=("Helvetica", 20, "bold")).pack(pady=15)
-
-        ctk.CTkLabel(janela, text="Digite a data de início (ddmmaaaa):", font=("Helvetica", 14)).pack(pady=10)
-
-        self.entrada_data = ctk.CTkEntry(janela, placeholder_text="Ex: 24062025", width=300)
-        self.entrada_data.pack(pady=10)
-
-        self.despesasfixas_entrada = ctk.CTkEntry(janela, placeholder_text="Despesas fixas", width=300)
-        self.despesasfixas_entrada.pack(pady=10)
-
-        self.despesasvariaveis_entrada = ctk.CTkEntry(janela, placeholder_text="Despesas variaveis", width=300)
-        self.despesasvariaveis_entrada.pack(pady=10)
-
-        self.msg_erro = ctk.CTkLabel(janela, text="", text_color="red", font=("Helvetica", 12))
-        self.msg_erro.pack(pady=5)
-
-        def salvar_data():
-            data_str = self.entrada_data.get()
-            despesasfixas = self.despesasfixas_entrada.get()
-            despesasvariaveis = self.despesasvariaveis_entrada.get()
-            
-            self.msg_erro.configure(text="")  # limpa erro anterior
-
-            if len(data_str) != 8 or not data_str.isdigit():
-                self.msg_erro.configure(text="Data inválida. Use o formato ddmmaaaa.")
-                return
-
-            if not despesasfixas or not despesasvariaveis:
-                self.msg_erro.configure(text="Preencha os campos de despesas!")
-                return
-
-            try:
-                despesasfixas = float(despesasfixas.replace(",", ".")) 
-                despesasvariaveis = float(despesasvariaveis.replace(",", "."))
-
-                data_convertida = funçõespdf.dataForma1(int(data_str))
-                self.data_inicio_analise = data_convertida
-
-                # Salva os dados no banco de dados
-                funçõespdf.salvarDados(data_convertida, despesasfixas, despesasvariaveis)
-
-                CTkMessagebox(
-                    title="Sucesso",
-                    message=f"Data e despesas salvas!\nData: {data_str[:2]}/{data_str[2:4]}/{data_str[4:]}\nFixas: R$ {despesasfixas:.2f}\nVariáveis: R$ {despesasvariaveis:.2f}",
-                    icon="check"
-        )
-
-                self.entrada_data.delete(0, ctk.END)
-                self.despesasfixas_entrada.delete(0, ctk.END)
-                self.despesasvariaveis_entrada.delete(0, ctk.END)
-
-            except ValueError:
-                self.msg_erro.configure(text="As despesas devem ser números válidos (ex: 1200.50)")
-            except Exception as e:
-                self.msg_erro.configure(text=f"Erro inesperado: {e}")
-
-
-        alinharbtn = ctk.CTkFrame(janela, fg_color="transparent")
-        alinharbtn.pack(pady=15)
-
-        ctk.CTkButton(alinharbtn, text="Salvar Data", command=salvar_data, width=140).pack(side="left", padx=10)
-        ctk.CTkButton(alinharbtn, text="Voltar ao Menu", command=self.tela_menu_inicial, width=140).pack(side="left", padx=10)
-
     def abrir_tela_registrar_serviço(self):
         for itens in self.winfo_children():
             itens.destroy()
@@ -614,6 +537,237 @@ class App(ctk.CTk):
 
         ctk.CTkButton(alinharbtn, text="Registrar", command=registrarservico_efetuado).pack(side="left", padx=10)
         ctk.CTkButton(alinharbtn, text="Voltar ao Menu", command=self.tela_menu_inicial).pack(side="left", padx=10)
+
+    def abrirTelaPDF(self):
+        for itens in self.winfo_children():
+            itens.destroy()
+
+        janela = ctk.CTkFrame(self, corner_radius=15)
+        janela.pack(pady = 70, padx = 70, fill = "both", expand = True)
+
+        ctk.CTkLabel(janela, text = "Análise de Progresso", font = ("Helvetica", 20, "bold")).pack(pady = 15)
+
+        ctk.CTkButton(janela,
+                    text = "Salvar Progresso",
+                    command = self.botao_salvar_progresso,
+                    width = 220,
+                    height = 30,
+                    font = ("Helvetica", 14)).pack(pady = (10))
+        
+        ctk.CTkButton(janela,
+                    text = "Abrir PDF",
+                    command = self.botao_abrirPDF,
+                    width = 220,
+                    height = 30,
+                    font = ("Helvetica", 14)).pack(pady = (10))
+        
+        alinharbtn = ctk.CTkFrame(janela, fg_color="transparent")
+        alinharbtn.pack(pady = 15)
+        
+        ctk.CTkButton(alinharbtn, text = "Voltar ao Menu", command=self.tela_menu_inicial, width=140).pack(side="left", padx=10)
+        
+    def botao_salvar_progresso(self):
+        for item in self.winfo_children():
+            item.destroy()
+
+        janela = ctk.CTkFrame(self, corner_radius = 15)
+        janela.pack(pady = 70, padx = 70, fill = "both", expand = True)
+
+        ctk.CTkLabel(janela, text = "Salvar Progresso", font = ("Helvetica", 20, "bold")).pack(pady = 15)
+
+        ctk.CTkLabel(janela, text = "Digite a data de hoje (ddmmaaaa):", font = ("Helvetica", 14)).pack(pady = 10)
+
+        self.entrada_data = ctk.CTkEntry(janela, placeholder_text = "Ex: 24062025 (Representa 24/06/2025)", width = 300)
+        self.entrada_data.pack(pady = 10)
+
+        self.despesasfixas_entrada = ctk.CTkEntry(janela, placeholder_text = "Despesas fixas", width = 300)
+        self.despesasfixas_entrada.pack(pady = 10)
+
+        self.despesasvariaveis_entrada = ctk.CTkEntry(janela, placeholder_text = "Despesas variaveis", width = 300)
+        self.despesasvariaveis_entrada.pack(pady = 10)
+
+        self.msg_erro = ctk.CTkLabel(janela, text = "", text_color = "red", font = ("Helvetica", 12))
+        self.msg_erro.pack(pady = 5)
+
+        def salvar_data():
+            data_str = self.entrada_data.get()
+            despesasfixas = self.despesasfixas_entrada.get()
+            despesasvariaveis = self.despesasvariaveis_entrada.get()
+            
+            self.msg_erro.configure(text="")  # limpa erro anterior
+
+            if len(data_str) != 8 or not data_str.isdigit():
+                self.msg_erro.configure(text="Data inválida. Use o formato ddmmaaaa.")
+                return
+
+            if not despesasfixas or not despesasvariaveis:
+                self.msg_erro.configure(text="Preencha os campos de despesas!")
+                return
+
+            try:
+                despesasfixas = float(despesasfixas.replace(",", ".")) 
+                despesasvariaveis = float(despesasvariaveis.replace(",", "."))
+
+                data_convertida = funçõespdf.dataForma1(int(data_str))
+                self.data_inicio_analise = data_convertida
+
+                # Salva os dados no banco de dados
+                funçõespdf.salvarDados(data_convertida, despesasfixas, despesasvariaveis)
+
+                CTkMessagebox(
+                    title="Sucesso",
+                    message=f"Data e despesas salvas!\nData: {data_str[:2]}/{data_str[2:4]}/{data_str[4:]}\nFixas: R$ {despesasfixas:.2f}\nVariáveis: R$ {despesasvariaveis:.2f}",
+                    icon="check")
+
+                self.entrada_data.delete(0, ctk.END)
+                self.despesasfixas_entrada.delete(0, ctk.END)
+                self.despesasvariaveis_entrada.delete(0, ctk.END)
+
+            except ValueError:
+                self.msg_erro.configure(text="As despesas devem ser números válidos (ex: 1200.50)")
+            except Exception as e:
+                self.msg_erro.configure(text=f"Erro inesperado: {e}")
+
+
+        alinharbtn = ctk.CTkFrame(janela, fg_color="transparent")
+        alinharbtn.pack(pady = 15)
+
+        ctk.CTkButton(alinharbtn, text = "Salvar Data", command=salvar_data, width=140).pack(side="left", padx=10)
+        ctk.CTkButton(alinharbtn, text = "Voltar", command=self.abrirTelaPDF, width=140).pack(side="left", padx=10)
+
+    def botao_abrirPDF(self):
+        for item in self.winfo_children():
+            item.destroy()
+
+        janela = ctk.CTkFrame(self, corner_radius = 15)
+        janela.pack(pady = 70, padx = 70, fill  ="both", expand = True)
+
+        ctk.CTkLabel(janela, text = "Consultar Progresso entre Datas", font = ("Helvetica", 20, "bold")).pack(pady = 15)
+
+        dataInicial = ""
+        dataFinal = ""
+
+        def salvarInicial():
+            global dataInicial 
+            dataInicial = self.listaDataInicial()     
+        
+        def salvarFinal():
+            global dataFinal 
+            dataFinal = self.listaDataFinal()
+
+        ctk.CTkButton(janela,
+                    text = "Data Inicial",
+                    command = salvarInicial,
+                    width = 220,
+                    height = 30,
+                    font = ("Helvetica", 14)).pack(pady = (10))
+        ctk.CTkButton(janela,
+                    text = "Data Final",
+                    command = salvarFinal,
+                    width = 220,
+                    height = 30,
+                    font = ("Helvetica", 14)).pack(pady = (10))
+
+        # self.dataInicio_entrada = ctk.CTkEntry(janela, placeholder_text = "Data Inicial", width = 300)
+        # self.dataInicio_entrada.pack(pady = 10)
+
+        # self.dataFinal_entrada = ctk.CTkEntry(janela, placeholder_text = "Data Final", width = 300)
+        # self.dataFinal_entrada.pack(pady = 10)
+
+        self.msg_erro = ctk.CTkLabel(janela, text = "", text_color = "red", font = ("Helvetica", 12))
+        self.msg_erro.pack(pady = 5)
+
+        def abrirPDF():
+            global dataInicial
+            global dataFinal
+
+            dataInicial, dataFinal =  str(dataInicial), str(dataFinal)
+
+            if not dataInicial or not dataFinal:
+                self.msg_erro.configure(text = "Você tem que escolher as duas datas!")
+                return
+            if len(dataInicial) != 8 or not dataInicio.isdigit() or len(dataFinal) != 8 or not dataFinal.isdigit():
+                self.msg_erro.configure(text = "Data inválida! Use o formato ddmmaaaa.")
+                return
+            
+            dataInicio, dataFinal =  int(dataInicio), int(dataFinal)
+
+            if dataInicio not in funçõespdf.listaDatasSalvas or dataFinal not in funçõespdf.listaDatasSalvas:
+                self.msg_erro.configure(text = "Você só pode usar datas que estejam entre as dats salvas!")
+                return
+
+            try:
+                funçõespdf.salvarPDF(dataInicio, dataFinal)
+                funçõespdf.abrirPDF()
+
+                self.dataInicio_entrada.delete(0, ctk.END)
+                self.dataFinal_entrada.delete(0, ctk.END)
+
+            except ValueError:
+                self.msg_erro.configure(text = "Use datas que já tenham sido salvas!")
+            except Exception as e:
+                self.msg_erro.configure(text = f"Erro inesperado: {e}")
+
+        alinharbtn = ctk.CTkFrame(janela, fg_color = "transparent")
+        alinharbtn.pack(pady = 15)
+        
+        ctk.CTkButton(alinharbtn, text = "Abrir PDF", command = abrirPDF, width=140).pack(side = "left", padx = 10)
+        ctk.CTkButton(alinharbtn, text = "Voltar", command = self.abrirTelaPDF, width = 140).pack(side = "left", padx = 10)
+
+    def listaDataInicial(self):
+        for itens in self.winfo_children():
+            itens.destroy()
+
+        janela = ctk.CTkFrame(self, corner_radius=15)
+        janela.pack(pady = 70, padx = 70, fill = "both", expand = True)
+
+        ctk.CTkLabel(janela, text = "Lista de Datas Possíveis", font = ("Helvetica", 20, "bold")).pack(pady = 15)
+
+        listaDatasSalvas = funçõespdf.listaDatasSalvas()
+
+        dataInicial = ""
+
+        def salvar(talData):
+            global dataInicial 
+            dataInicial = talData
+
+        for i in listaDatasSalvas:
+                    ctk.CTkButton(janela,
+                                text = funçõespdf.dataNormal(i),
+                                command = salvar(i),
+                                width = 220,
+                                height = 30,
+                                font = ("Helvetica", 14)).pack(pady = (10))
+                    
+        return dataInicial
+    
+    def listaDataFinal(self, dataInicial):
+        for itens in self.winfo_children():
+            itens.destroy()
+
+        janela = ctk.CTkFrame(self, corner_radius=15)
+        janela.pack(pady = 70, padx = 70, fill = "both", expand = True)
+
+        ctk.CTkLabel(janela, text = "Lista de Datas Possíveis", font = ("Helvetica", 20, "bold")).pack(pady = 15)
+
+        listaDatasSalvas = funçõespdf.listaDatasSalvas2(dataInicial)
+
+        dataFinal = ""
+
+        def salvar(talData):
+            global dataFinal 
+            dataFinal = talData
+
+        for i in listaDatasSalvas:
+                    ctk.CTkButton(janela,
+                                text = funçõespdf.dataNormal(i),
+                                command = salvar(i),
+                                width = 220,
+                                height = 30,
+                                font = ("Helvetica", 14)).pack(pady = (10))
+                    
+        return dataFinal
+
     
 app = App()
 app.mainloop()

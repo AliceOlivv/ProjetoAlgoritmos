@@ -12,6 +12,39 @@ def dataForma2(data):  # Exemplo: "24/06/2025"
     data_convertida = int(data[6:10] + data[3:5] + data[0:2])  # "20250624"
     return data_convertida
 
+def listaDatasSalvas():
+    import sqlite3
+
+    banco = sqlite3.connect('banco_lojaArcanjo.db')
+    cursor = banco.cursor()
+
+    cursor.execute("SELECT Data FROM Dados_Salvos WHERE Data != 0")
+    tuplaDatas = cursor.fetchall()
+
+    listaDatas = [linha[0] for linha in tuplaDatas]
+
+    banco.commit()
+    banco.close()
+    
+    return(listaDatas[0:-1])
+
+def listaDatasSalvas2(data1):
+    import sqlite3
+
+    banco = sqlite3.connect('banco_lojaArcanjo.db')
+    cursor = banco.cursor()
+
+    cursor.execute("SELECT Data FROM Dados_Salvos WHERE Data > ?", (data1,))
+    tuplaDatas = cursor.fetchall()
+
+    listaDatas = [linha[0] for linha in tuplaDatas]
+
+    banco.commit()
+    banco.close()
+    
+    return(listaDatasSalvas2)
+
+
 
 def listaParados():
     import sqlite3
@@ -177,18 +210,19 @@ def criarPDF(Nome, data1, data2):
 
 def salvarPDF(data1, data2):
     from tkinter import filedialog
-    caminho = filedialog.asksaveasfilename(
+
+    filedialog.asksaveasfilename(
     defaultextension = ".pdf",
     filetypes =[("Análises",".pdf")],
     title = "PDF Salvo")
 
-    criarPDF("Análises", 20250624, 20250625)
+    criarPDF("Análises.pdf", data1, data2)
 
 def abrirPDF():
     import os
     import platform
 
-    caminho = "Análises.pdf"  # ou o nome que você usou em salvarPDF
+    caminho = "Análises.pdf"
 
     if platform.system() == "Windows":
         os.startfile(caminho)
